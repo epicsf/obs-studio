@@ -4,6 +4,7 @@
 #include "window-basic-main.hpp"
 #include "platform.hpp"
 #include "obs-app.hpp"
+#include "qt-wrappers.hpp"
 
 #include <QDesktopWidget>
 #include <QPushButton>
@@ -228,6 +229,7 @@ void OBSBasicStats::InitializeValues()
 
 void OBSBasicStats::Update()
 {
+	QString blogOutput = "";
 	OBSBasic *main = reinterpret_cast<OBSBasic*>(App()->GetMainWindow());
 
 	/* TODO: Un-hardcode */
@@ -250,6 +252,7 @@ void OBSBasicStats::Update()
 	double obsFPS = (double)ovi.fps_num / (double)ovi.fps_den;
 
 	QString str = QString::number(curFPS, 'f', 2);
+	blogOutput.append(" FPS: " + str);
 	fps->setText(str);
 
 	if (curFPS < (obsFPS * 0.8))
@@ -312,6 +315,7 @@ void OBSBasicStats::Update()
 	num = (long double)obs_get_average_frame_time_ns() / 1000000.0l;
 
 	str = QString::number(num, 'f', 1) + QStringLiteral(" ms");
+	blogOutput.append(" Render Time: " + str);
 	renderTime->setText(str);
 
 	long double fpsFrameTime =
@@ -390,6 +394,12 @@ void OBSBasicStats::Update()
 
 	outputLabels[0].Update(strOutput);
 	outputLabels[1].Update(recOutput);
+
+	/* ------------------------------------------- */
+	/* output to logs                              */
+	if (log_verbose) {
+		blog(LOG_INFO, "jwu - Testing OBS Stat Output -%s", QT_TO_UTF8(blogOutput));
+	}
 }
 
 void OBSBasicStats::Reset()

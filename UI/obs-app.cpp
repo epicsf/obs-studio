@@ -63,8 +63,8 @@ static string lastLogFile;
 
 bool portable_mode = false;
 static bool multi = false;
-static bool log_verbose = false;
-static bool unfiltered_log = false;
+bool log_verbose = false;
+bool unfiltered_log = false;
 bool opt_start_streaming = false;
 bool opt_start_recording = false;
 bool opt_studio_mode = false;
