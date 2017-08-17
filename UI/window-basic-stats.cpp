@@ -229,7 +229,7 @@ void OBSBasicStats::InitializeValues()
 
 void OBSBasicStats::Update()
 {
-	QString blogOutput = "";
+	QString stats = "";
 	OBSBasic *main = reinterpret_cast<OBSBasic*>(App()->GetMainWindow());
 
 	/* TODO: Un-hardcode */
@@ -252,7 +252,7 @@ void OBSBasicStats::Update()
 	double obsFPS = (double)ovi.fps_num / (double)ovi.fps_den;
 
 	QString str = QString::number(curFPS, 'f', 2);
-	blogOutput.append(" FPS: " + str);
+	stats.append(" | FPS: " + str);
 	fps->setText(str);
 
 	if (curFPS < (obsFPS * 0.8))
@@ -266,6 +266,7 @@ void OBSBasicStats::Update()
 
 	double usage = os_cpu_usage_info_query(cpu_info);
 	str = QString::number(usage, 'g', 2) + QStringLiteral("%");
+	stats.append(" | CPU Usage: " + str);
 	cpuUsage->setText(str);
 
 	/* ------------------ */
@@ -292,6 +293,7 @@ void OBSBasicStats::Update()
 	}
 
 	str = QString::number(num, 'f', 1) + abrv;
+	stats.append(" | HDD Space: " + str);
 	hddSpace->setText(str);
 
 	if (num_bytes < GBYTE)
@@ -307,6 +309,7 @@ void OBSBasicStats::Update()
 	num = (long double)CurrentMemoryUsage() / (1024.0l * 1024.0l);
 
 	str = QString::number(num, 'f', 1) + QStringLiteral(" MB");
+	stats.append(" | Mem Usage: " + str);
 	memUsage->setText(str);
 #endif
 
@@ -315,7 +318,7 @@ void OBSBasicStats::Update()
 	num = (long double)obs_get_average_frame_time_ns() / 1000000.0l;
 
 	str = QString::number(num, 'f', 1) + QStringLiteral(" ms");
-	blogOutput.append(" Render Time: " + str);
+	stats.append(" | Render Time: " + str);
 	renderTime->setText(str);
 
 	long double fpsFrameTime =
@@ -350,6 +353,7 @@ void OBSBasicStats::Update()
 			QString::number(total_skipped),
 			QString::number(total_encoded),
 			QString::number(num, 'f', 1));
+	stats.append(" | Skipped Frames: " + str);
 	skippedFrames->setText(str);
 
 	if (num > 5.0l)
@@ -380,6 +384,7 @@ void OBSBasicStats::Update()
 			QString::number(total_lagged),
 			QString::number(total_rendered),
 			QString::number(num, 'f', 1));
+	stats.append(" | Missed Frames: " + str);
 	missedFrames->setText(str);
 
 	if (num > 5.0l)
@@ -397,8 +402,8 @@ void OBSBasicStats::Update()
 
 	/* ------------------------------------------- */
 	/* output to logs                              */
-	if (log_verbose) {
-		blog(LOG_INFO, "jwu - Testing OBS Stat Output -%s", QT_TO_UTF8(blogOutput));
+	if (log_stats) {
+		blog(LOG_INFO, "stats:%s", QT_TO_UTF8(stats));
 	}
 }
 

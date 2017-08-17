@@ -63,8 +63,9 @@ static string lastLogFile;
 
 bool portable_mode = false;
 static bool multi = false;
-bool log_verbose = false;
-bool unfiltered_log = false;
+static bool log_verbose = false;
+static bool unfiltered_log = false;
+bool log_stats = false;
 bool opt_start_streaming = false;
 bool opt_start_recording = false;
 bool opt_studio_mode = false;
@@ -1867,6 +1868,9 @@ int main(int argc, char *argv[])
 		} else if (arg_is(argv[i], "--verbose", nullptr)) {
 			log_verbose = true;
 
+		} else if (arg_is(argv[i], "--stats", nullptr)) {
+			log_stats = true;
+
 		} else if (arg_is(argv[i], "--always-on-top", nullptr)) {
 			opt_always_on_top = true;
 
@@ -1915,6 +1919,7 @@ int main(int argc, char *argv[])
 			"--portable, -p: Use portable mode.\n" <<
 			"--multi, -m: Don't warn when launching multiple instances.\n\n" <<
 			"--verbose: Make log more verbose.\n" <<
+			"--stats: Make log show stream stats.\n" <<
 			"--always-on-top: Start in 'always on top' mode.\n\n" <<
 			"--unfiltered_log: Make log unfiltered.\n\n" <<
 			"--allow-opengl: Allow OpenGL on Windows.\n\n" <<
